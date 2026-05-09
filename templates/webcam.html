@@ -21,9 +21,15 @@
       <div class="card shadow-sm video-card">
         <div class="card-body">
           <h1 class="card-title mb-4">Live Webcam Object Detection</h1>
+          {% if camera_available %}
           <div class="mb-3">
             <img src="{{ url_for('video_feed') }}" alt="Webcam Stream">
           </div>
+          {% else %}
+          <div class="alert alert-warning">
+            <strong>Webcam not available.</strong> Please check your camera connection.
+          </div>
+          {% endif %}
           <a href="/" class="btn btn-secondary">Back to Image Upload</a>
         </div>
       </div>

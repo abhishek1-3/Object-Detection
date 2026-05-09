@@ -10,9 +10,9 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-MODEL_PATH = os.path.join(BASE_DIR, "yoloweights", "yolov8n.pt")
+MODEL_PATH = os.path.join(BASE_DIR, "yoloweights", "yolov8l.pt")
 if not os.path.exists(MODEL_PATH):
-    MODEL_PATH = os.path.join(BASE_DIR, "yoloweights", "yolov8l.pt")
+    MODEL_PATH = os.path.join(BASE_DIR, "yoloweights", "yolov8m.pt")
     if not os.path.exists(MODEL_PATH):
         raise FileNotFoundError("YOLO model not found under yoloweights/")
 
@@ -71,12 +71,24 @@ def detect():
     return render_template("index.html", filename=filename)
 
 
-camera = cv2.VideoCapture(0)
-if not camera.isOpened():
-    raise RuntimeError("Cannot open webcam. Please check the camera and try again.")
+camera = None
+
+
+def initialize_camera():
+    global camera
+    if camera is None:
+        camera = cv2.VideoCapture(0)
+    return camera.isOpened()
 
 
 def generate_frames():
+    global camera
+    if camera is None or not camera.isOpened():
+        yield (b"--frame\r\n"
+               b"Content-Type: image/jpeg\r\n\r\n"
+               b"\r\n")
+        return
+
     while True:
         success, frame = camera.read()
         if not success:
@@ -96,7 +108,8 @@ def generate_frames():
 
 @app.route("/webcam")
 def webcam():
-    return render_template("webcam.html")
+    camera_ok = initialize_camera()
+    return render_template("webcam.html", camera_available=camera_ok)
 
 
 @app.route("/video_feed")
