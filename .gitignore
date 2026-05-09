@@ -1,0 +1,10 @@
+.idea/
+.venv/
+*.onnx
+*.pt
+yoloweights/
+*.jpg
+*.jpeg
+*.png
+
+*.mp4
