@@ -1,5 +1,8 @@
 .idea/
 .venv/
+__pycache__/
+static/uploads/*
+!static/uploads/.gitkeep
 *.onnx
 *.pt
 yoloweights/
