@@ -12,6 +12,11 @@
         <div class="card-body">
           <h1 class="card-title mb-4">Object Detection Website</h1>
           <p class="lead">Upload an image to detect objects, or use the webcam live stream.</p>
+          {% if error %}
+          <div class="alert alert-danger" role="alert">
+            {{ error }}
+          </div>
+          {% endif %}
           <form method="POST" action="/detect" enctype="multipart/form-data" class="mb-4">
             <div class="mb-3">
               <label for="image" class="form-label">Upload image</label>
